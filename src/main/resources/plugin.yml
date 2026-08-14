@@ -1,0 +1,33 @@
+name: WorldBorder
+main: me.vals.worldborder.WorldBorder
+version: "1.0-SNAPSHOT"
+author: "Vals"
+description: "A Badlion-inspired WorldBorder fork that provides reliable, configurable per-world borders to keep players within defined boundaries."
+
+commands:
+  wborder:
+    description: Manage world borders.
+    aliases: [wb]
+    usage: /wb <world> <subcommand> [args]
+
+permissions:
+  worldborder.command.set:
+    default: op
+  worldborder.command.radius:
+    default: op
+  worldborder.command.clear:
+    default: op
+  worldborder.command.list:
+    default: op
+  worldborder.command.shape:
+    default: op
+  worldborder.command.wshape:
+    default: op
+  worldborder.command.wrap:
+    default: op
+  worldborder.command.fill:
+    default: op
+  worldborder.command.trim:
+    default: op
+  worldborder.command.help:
+    default: op

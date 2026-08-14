@@ -1,6 +1,7 @@
 package me.vals.worldborder.settings
 
 import me.vals.worldborder.WorldBorder
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import java.text.DecimalFormat
@@ -29,8 +30,15 @@ object PluginSettings {
         private set
     var timerTicks = 4
     var fillAutosaveFrequency = 30
-    var fillMemoryTolerance = 500
+    var fillMemoryTolerance = DEFAULT_MEMORY_TOLERANCE
+        set(value) {
+            field = value.coerceIn(MIN_MEMORY_TOLERANCE, MAX_MEMORY_TOLERANCE)
+        }
     const val knockback = 3.0
+
+    const val MIN_MEMORY_TOLERANCE = 1024L
+    const val MAX_MEMORY_TOLERANCE = 10240L
+    const val DEFAULT_MEMORY_TOLERANCE = 2048L
 
     fun bind(plugin: WorldBorder) {
         this.plugin = plugin
@@ -59,5 +67,8 @@ object PluginSettings {
         return false
     }
 
-    fun log(text: String, level: Level = Level.INFO) = plugin.logger.log(level, text)
+    fun log(text: String, level: Level = Level.INFO) {
+        Bukkit.getConsoleSender().sendMessage(text)
+        plugin.logger.log(level, ChatColor.stripColor(text))
+    }
 }

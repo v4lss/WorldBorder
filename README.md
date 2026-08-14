@@ -77,7 +77,7 @@ These values can be modified in `PluginSettings.kt`:
 |----------|-------------|---------|
 | `timerTicks` | Border check interval (ticks) | 4 |
 | `fillAutosaveFrequency` | Auto-save interval during fill (seconds) | 30 |
-| `fillMemoryTolerance` | Minimum memory before pausing fill (MB) | 500 |
+| `fillMemoryTolerance` | Minimum memory before pausing fill (MB, min: 1024, max: 10240) | 2048 |
 | `roundByDefault` | Default shape (true = elliptic, false = rectangular) | true |
 | `knockback` | Knockback distance when crossing border | 3.0 |
 

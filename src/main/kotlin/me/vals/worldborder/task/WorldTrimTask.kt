@@ -290,7 +290,7 @@ class WorldTrimTask(
     }
 
     private fun notify(text: String) {
-        val message = "${ChatColor.GRAY}[Trim] $text"
+        val message = "${ChatColor.YELLOW}[Trim] $text"
         PluginSettings.log(message)
         notifyPlayer?.takeIf { it.isOnline }?.sendMessage(message)
     }

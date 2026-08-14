@@ -136,6 +136,12 @@ class WorldFillTask(
         for (loop in 0 until chunksPerRun) {
             if (isPaused || pausedForMemory) return
 
+            if (PluginSettings.isMemoryLow()) {
+                pausedForMemory = true
+                notify("Available memory is low, pausing to free up resources.")
+                return
+            }
+
             val now = PluginSettings.now()
             if (now > lastReport + 5000) reportProgress()
             if (now > loopStart + 45) {
@@ -266,10 +272,8 @@ class WorldFillTask(
     private fun reportProgress() {
         lastReport = PluginSettings.now()
         val percentage = ((reportTotal + reportNum) * 100.0 / reportTarget).coerceIn(0.0, 100.0)
-        notify(
-            "$reportNum more chunks processed (${reportTotal + reportNum} total, " +
-                    "~${PluginSettings.coordinateFormat.format(percentage)}%)"
-        )
+        notify("$reportNum more chunks processed (${reportTotal + reportNum} total, " + "~${PluginSettings.coordinateFormat.format(percentage)}%)")
+
         reportTotal += reportNum
         reportNum = 0
 
@@ -283,19 +287,23 @@ class WorldFillTask(
     }
 
     private fun notify(text: String) {
-        val message = "${ChatColor.GRAY}[Fill] $text"
+        val message = "${ChatColor.YELLOW}[Fill] $text"
         PluginSettings.log(message)
         notifyPlayer?.takeIf { it.isOnline }?.sendMessage(message)
         Bukkit.getPluginManager().callEvent(FillProgressMessageEvent(message))
 
-        if (PluginSettings.availableMemoryMegabytes() < 300) {
+        val availableMB = PluginSettings.availableMemoryMegabytes()
+        if (availableMB < PluginSettings.fillMemoryTolerance) {
             pausedForMemory = true
-            val memoryMessage = "${ChatColor.RED}[Fill] Available memory is very low, task is pausing. A cleanup will be attempted " +
-                    "now, and the task will automatically continue if/when sufficient memory is freed up.\n" +
-                    "Alternatively, if you restart the server, this task will automatically continue once the server is back up."
+            val memoryMessage = "${ChatColor.RED}[Fill] Available memory is very low (${availableMB}MB), task is pausing. " +
+                    "It will automatically continue when memory is freed up."
             PluginSettings.log(memoryMessage)
             notifyPlayer?.takeIf { it.isOnline }?.sendMessage(memoryMessage)
             System.gc()
+        } else if (availableMB < PluginSettings.fillMemoryTolerance * 1.5) {
+            val warnMessage = "${ChatColor.YELLOW}[Fill] Warning: available memory is getting low (${availableMB}MB)."
+            PluginSettings.log(warnMessage)
+            notifyPlayer?.takeIf { it.isOnline }?.sendMessage(warnMessage)
         }
     }
 

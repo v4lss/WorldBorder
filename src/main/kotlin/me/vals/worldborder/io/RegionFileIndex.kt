@@ -72,7 +72,7 @@ class RegionFileIndex private constructor(
     }
 
     private fun notify(text: String) {
-        val message = "${ChatColor.GRAY}[WorldData] $text"
+            val message = "${ChatColor.YELLOW}[WorldData] $text"
         PluginSettings.log(message)
         if (notifyPlayer?.isOnline == true) notifyPlayer.sendMessage(message)
     }
@@ -112,7 +112,7 @@ class RegionFileIndex private constructor(
         }
 
         private fun fail(notifyPlayer: Player?, text: String): RegionFileIndex? {
-            val message = "${ChatColor.GRAY}[WorldData] $text"
+        val message = "${ChatColor.YELLOW}[WorldData] $text"
             PluginSettings.log(message)
             if (notifyPlayer?.isOnline == true) notifyPlayer.sendMessage(message)
             return null
